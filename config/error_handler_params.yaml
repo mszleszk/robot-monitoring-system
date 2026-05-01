@@ -1,0 +1,4 @@
+error_handler:
+  ros__parameters:
+    sensors: ['lidar', 'camera']
+    

@@ -1,0 +1,5 @@
+camera:
+  ros__parameters:
+    timer_period: 1.0
+    jam_probability: 0.05
+    error_probability: 0.0

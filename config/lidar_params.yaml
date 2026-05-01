@@ -1,0 +1,5 @@
+lidar:
+  ros__parameters:
+    timer_period: 1.0
+    jam_probability: 0.0
+    error_probability: 0.05

@@ -1,0 +1,5 @@
+state_monitor:
+  ros__parameters:
+    sensors: ['lidar', 'camera']
+    timeout: 1.5
+    robot_state_timer_period: 1.0
