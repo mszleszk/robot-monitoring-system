@@ -34,13 +34,14 @@ class StateMonitor(Node):
          self.subs.append(sub)
 
       self.state_check_timer = self.create_timer(self.timeout, self.state_check_timer_callback)
-      self.states = {sensor: True for sensor in self.sensors}
+      self.sensor_info = {sensor: {'state': True, 'timeout': False} for sensor in self.sensors}
 
       self.client = self.create_client(ComponentError, 'component_error')
 
 
    def listener_callback(self, msg, sensor):
-      self.states[sensor] = msg.data
+      self.sensor_info[sensor]['timeout'] = False
+      self.sensor_info[sensor]['state'] = msg.data
 
       # self.get_logger().info(f'I heard: {msg.data} from {sensor}')
 
@@ -50,12 +51,13 @@ class StateMonitor(Node):
 
 
    def state_check_timer_callback(self):
-      for sensor, state in self.states.items():
-         if state == False:
+      for sensor, info in self.sensor_info.items():
+         if info['timeout'] == True and info['state'] == True:
             self.get_logger().info(f"No state message from {sensor}. Notifying error handler.")
             self.notify_error_handler(sensor)
+            self.sensor_info[sensor]['state'] = False
 
-         self.states[sensor] = False
+         self.sensor_info[sensor]['timeout'] = True
 
 
    def robot_state_timer_callback(self):
@@ -63,8 +65,8 @@ class StateMonitor(Node):
 
       msg.data = True
 
-      for _, state in self.states.items():
-         if state == False:
+      for _, info in self.sensor_info.items():
+         if info['state'] == False:
             msg.data = False
 
       self.publisher.publish(msg)
