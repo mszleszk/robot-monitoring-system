@@ -52,7 +52,7 @@ class StateMonitor(Node):
 
    def state_check_timer_callback(self):
       for sensor, info in self.sensor_info.items():
-         if info['timeout'] == True and info['state'] == True:
+         if info['timeout'] == True:
             self.get_logger().info(f"No state message from {sensor}. Notifying error handler.")
             self.notify_error_handler(sensor)
             self.sensor_info[sensor]['state'] = False
